@@ -1,0 +1,43 @@
+version: '3'
+services:
+  db:
+    image: mysql
+    container_name: db_docker_project_test
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    volumes:
+       - dbdata:/var/lib/mysql
+    networks:
+     - dev
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin_docker_project_test
+    links:
+     - db
+    ports:
+    - 8080:80
+    environment:
+      MYSQL_USERNAME: root
+      MYSQL_ROOT_PASSWORD: '123456'
+      PMA_HOST: db
+    networks:
+     - dev
+
+      
+  www:
+    build: php
+    container_name: www_docker_project_test
+    ports:
+     - "8084:80"
+    volumes:
+     - ./php/vhosts:/etc/apache2/sites-enabled
+     - ./:/var/www
+    restart: always
+    networks:
+     - dev 
+networks:
+  dev:
+volumes:
+  dbdata:
+
+

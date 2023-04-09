@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Symfony\Component\Dotenv\Dotenv;
 /**
  * @Route("/newsletters", name="newsletters_")
  */
@@ -27,6 +27,15 @@ class NewslettersController extends AbstractController
      */
     public function index(Request $request, MailerInterface $mailer): Response
     {
+        // dd($this->getParameter('app.custom'));
+       
+
+        // $dotenv = new Dotenv();
+        // $dotenv->load(__DIR__.'/.env');
+        // // $dotenv->load('.env');
+        // print_r($_ENV);
+        // $dbUser = getenv('DB_USER');
+        // dd($dbUser);
         $user = new Users();
         $form = $this->createForm(NewslettersUsersType::class, $user);
 
@@ -48,7 +57,7 @@ class NewslettersController extends AbstractController
                 ->htmlTemplate('emails/inscription.html.twig')
                 ->context(compact('user', 'token'))
                 ;
-
+            // 100039935067620
             $mailer->send($email);
 
             $this->addFlash('message', 'Inscription en attente de validation');
@@ -59,7 +68,6 @@ class NewslettersController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
     /**
      * @Route("/confirm/{id}/{token}", name="confirm")
      */
